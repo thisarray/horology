@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Clock</title>
+  <script src="../jsgame0.js"></script>
+  <style type="text/css" media="screen">
+body {
+  background-color: white;
+  color: black;
+}
+.hidden {
+  display: none;
+}
+#original {
+  margin-left: 1em;
+}
+  </style>
+</head>
+
+<body>
+
+<main>
+<h1>Text Clock</h1>
+
+<canvas id="screen">
+The game screen appears here if your browser supports the Canvas API.
+</canvas>
+<section id="controls">
+  <button type="button" id="reset">Reset</button>
+  <button type="button" id="pause">Pause</button>
+</section>
+
+<p>What time is it?</p>
+
+</main>
+
+<script>
+/*
+ * Array of string day names.
+ */
+const DAY_NAMES = [
+  'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+];
+
+/*
+ * Array of string month names.
+ */
+const MONTH_NAMES = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
+function draw() {
+  screen.clear();
+  let now = new Date(),
+      hours = (now.getHours() % 12).toFixed(0),
+      minutes = now.getMinutes().toFixed(0),
+      seconds = now.getSeconds().toFixed(0),
+      suffix = ' AM';
+  if (hours === '0') {
+    hours = '12';
+  }
+  minutes = minutes.padStart(2, '0');
+  seconds = seconds.padStart(2, '0');
+  if (now.getHours() > 11) {
+    suffix = ' PM';
+  }
+
+  screen.draw.text(`${ DAY_NAMES[now.getDay()] }, ${ MONTH_NAMES[now.getMonth()] } ${ now.getDate() }, ${ now.getFullYear() }`, {
+    center: [400, 200],
+    color: [255, 0, 0],
+    fontsize: 40
+  });
+  screen.draw.text(`${ hours }:${ minutes }:${ seconds } ${ suffix }`, {
+    center: [400, 300],
+    color: [255, 0, 0],
+    fontsize: 40
+  });
+}
+
+window.addEventListener('load', (event) => {
+  screen.set_mode('#screen', '#reset', '#pause');
+});
+</script>
+</body>
+
+</html>
