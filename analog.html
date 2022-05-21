@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analog Clock</title>
+  <script src="../jsgame0.js"></script>
+  <style type="text/css" media="screen">
+body {
+  background-color: white;
+  color: black;
+}
+.hidden {
+  display: none;
+}
+#original {
+  margin-left: 1em;
+}
+  </style>
+</head>
+
+<body>
+
+<main>
+<h1>Analog Clock</h1>
+
+<canvas id="screen">
+The game screen appears here if your browser supports the Canvas API.
+</canvas>
+<section id="controls">
+  <button type="button" id="reset">Reset</button>
+  <button type="button" id="pause">Pause</button>
+</section>
+
+<p>What time is it?</p>
+
+</main>
+
+<script>
+/*
+ * Integer coordinates of the center of the clock.
+ */
+const CENTER = [400, 300];
+
+/*
+ * Draw the face of the clock.
+ */
+function drawFace(startLength, endLength) {
+  let angle, start, end, width;
+  for (let i = 0; i < 60; i++) {
+    angle = i * 6 * Math.PI / 180;
+    start = [CENTER[0] + (startLength * Math.sin(angle)),
+             CENTER[1] - (startLength * Math.cos(angle))];
+    end = [CENTER[0] + (endLength * Math.sin(angle)),
+           CENTER[1] - (endLength * Math.cos(angle))];
+    if ((i % 15) === 0) {
+      width = 6;
+    }
+    else {
+      width = 2;
+    }
+    screen.draw.line(start, end, 'gray', width);
+  }
+}
+
+/*
+ * Draw a length long clock hand of color to indicate value.
+ */
+function drawHand(value, length, color, width) {
+  if (value < 0) {
+    throw new RangeError('value must be in [0, 60).');
+  }
+  if (value > 59) {
+    throw new RangeError('value must be in [0, 60).');
+  }
+  if (length <= 0) {
+    throw new RangeError('length must be a positive number.');
+  }
+
+  let angle = value * 6 * Math.PI / 180,
+      end = [CENTER[0] + (length * Math.sin(angle)),
+             CENTER[1] - (length * Math.cos(angle))];
+  screen.draw.line(CENTER, end, color, width);
+}
+
+function draw() {
+  screen.clear();
+  let now = new Date(),
+      hours = now.getHours() % 12,
+      minutes = now.getMinutes(),
+      seconds = now.getSeconds();
+
+  drawFace(115, 140);
+  drawHand(hours * 5, 50, [0, 0, 255], 8);
+  drawHand(minutes, 100, [0, 255, 0], 4);
+  drawHand(seconds, 100, [255, 0, 0], 2);
+}
+
+window.addEventListener('load', (event) => {
+  screen.set_mode('#screen', '#reset', '#pause');
+});
+</script>
+</body>
+
+</html>
