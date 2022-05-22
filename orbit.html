@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solar System</title>
+  <script src="../jsgame0.js"></script>
+  <style type="text/css" media="screen">
+body {
+  background-color: white;
+  color: black;
+}
+.hidden {
+  display: none;
+}
+#original {
+  margin-left: 1em;
+}
+  </style>
+</head>
+
+<body>
+
+<main>
+<h1>Solar System</h1>
+
+<canvas id="screen">
+The game screen appears here if your browser supports the Canvas API.
+</canvas>
+<section id="controls">
+  <button type="button" id="reset">Reset</button>
+  <button type="button" id="pause">Pause</button>
+</section>
+
+<p>This simple animation uses a circular orbit which is incorrect.
+The distances and sizes are also not to scale.</p>
+
+</main>
+
+<script>
+WIDTH = 800;
+HEIGHT = 800;
+
+/*
+ * Integer coordinates of the center of the screen.
+ */
+const CENTER = [400, 400];
+
+/*
+ * Integer radius of the sun in pixels.
+ */
+const SUN_RADIUS = 50;
+
+/*
+ * Integer radius of the earth in pixels.
+ */
+const EARTH_RADIUS = 4;
+
+/*
+ * Array of planet color, distance from the sun in pixels, radius relative to earth, and period in years.
+ */
+const PLANETS = [
+  // Mercury
+  ['gray', 38, 0.3829, 0.240846],
+  // Venus
+  ['green', 71, 0.9499, 0.615198],
+  // Earth
+  ['blue', 100, 1, 1],
+  // Mars
+  ['red', 152, 0.533, 1.88085],
+  // Jupiter
+  ['brown', 250, 11.209, 11.862],
+  // Saturn
+  ['goldenrod', 300, 9.449, 29.4571],
+  // Uranus
+  ['lightblue', 350, 4.007, 84.0205],
+  // Neptune
+  ['aqua', 375, 3.883, 164.8]
+];
+
+/*
+ * Integer distance of the moon from the earth in pixels.
+ */
+const MOON_DISTANCE = 7;
+
+/*
+ * Integer radius of the moon in pixels.
+ */
+const MOON_RADIUS = 1;
+
+let degree;
+
+function reset() {
+  degree = 0;
+}
+
+function draw() {
+  screen.clear();
+  screen.draw.filled_circle(CENTER, SUN_RADIUS, 'yellow');
+
+  for (let [color, distance, radius, period] of PLANETS) {
+    let center = [CENTER[0] + (distance * Math.sin((degree / period) * Math.PI / 180)),
+                  CENTER[1] - (distance * Math.cos((degree / period) * Math.PI / 180))];
+    screen.draw.circle(CENTER, distance, 'white');
+    screen.draw.filled_circle(center, radius * EARTH_RADIUS, color);
+    if (color === 'blue') {
+      // Moon revolves around the earth 12 times in the time the earth revolves around the sun once
+      center = [center[0] + (MOON_DISTANCE * Math.sin(degree * 12 * Math.PI / 180)),
+                center[1] - (MOON_DISTANCE * Math.cos(degree * 12 * Math.PI / 180))];
+      screen.draw.filled_circle(center, MOON_RADIUS, 'white');
+    }
+  }
+}
+
+function update() {
+  degree++;
+}
+
+window.addEventListener('load', (event) => {
+  reset();
+  screen.set_mode('#screen', '#reset', '#pause');
+});
+</script>
+</body>
+
+</html>
