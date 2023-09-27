@@ -45,7 +45,7 @@ HEIGHT = 800;
 /*
  * Integer coordinates of the center of the screen.
  */
-const CENTER = [400, 400];
+const CENTER = [Math.floor(WIDTH / 2), Math.floor(HEIGHT / 2)];
 
 /*
  * Integer radius of the sun in pixels.
@@ -58,7 +58,7 @@ const SUN_RADIUS = 50;
 const EARTH_RADIUS = 4;
 
 /*
- * Array of planet color, distance from the sun in pixels, radius relative to earth, and period in years.
+ * Array of string planet color, distance from the sun in pixels, radius relative to earth, and period in years.
  */
 const PLANETS = [
   // Mercury
