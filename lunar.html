@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lunar Phase</title>
+  <script src="../jsgame0.js"></script>
+  <style type="text/css" media="screen">
+body {
+  background-color: white;
+  color: black;
+}
+.hidden {
+  display: none;
+}
+#original {
+  margin-left: 1em;
+}
+  </style>
+</head>
+
+<body>
+
+<main>
+<h1>Lunar Phase</h1>
+
+<canvas id="screen">
+The game screen appears here if your browser supports the Canvas API.
+</canvas>
+<section id="controls">
+  <button type="button" id="reset">Reset</button>
+  <button type="button" id="pause">Pause</button>
+</section>
+
+<p>The lunar phases are calculated using the numbers of days since a reference new moon.
+<br>As a result, it assumes a perfectly circular orbit and may be off by several hours.</p>
+
+</main>
+
+<script>
+WIDTH = 400;
+HEIGHT = 400;
+
+/*
+ * Integer coordinates of the center of the screen.
+ */
+const CENTER = [Math.floor(WIDTH / 2), Math.floor(HEIGHT / 2)];
+
+/*
+ * Integer radius of the moon in pixels.
+ */
+const MOON_RADIUS = Math.floor(CENTER[0] / 2);
+
+/*
+ * Integer number of milliseconds in one day.
+ */
+const ONE_DAY = 24 * 60 * 60 * 1000;
+
+/*
+ * Integer average period of the Moon's orbit in milliseconds.
+ */
+const LUNATION = (29 * ONE_DAY) + (12 * 60 * 60 * 1000) + (44 * 60 * 1000) + 2900;
+
+/*
+ * Date object to the reference new moon.
+ */
+const EPOCH = new Date(1999, 8, 11);
+
+let now, phase;
+
+function reset() {
+  now = new Date();
+  phase = ((now.getTime() - EPOCH.getTime()) % LUNATION) / LUNATION;
+}
+
+function draw() {
+  screen.clear();
+  if (phase <= (ONE_DAY / LUNATION)) {
+    // New moon
+    screen.draw.circle(CENTER, MOON_RADIUS, 'white');
+  }
+  else if (phase < 0.5) {
+    // Waxing
+    screen.draw.filled_circle(CENTER, MOON_RADIUS, 'white', -phase * 360, phase * 360);
+  }
+  else {
+    // Waning
+    let start = (phase * 360) - 180;
+    screen.draw.filled_circle(CENTER, MOON_RADIUS, 'white', start, 360 - start);
+  }
+}
+
+window.addEventListener('load', (event) => {
+  screen.init();
+});
+</script>
+</body>
+
+</html>
