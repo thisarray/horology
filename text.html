@@ -56,15 +56,13 @@ const MONTH_NAMES = [
 function draw() {
   screen.clear();
   let now = new Date(),
-      hours = (now.getHours() % 12).toFixed(0),
-      minutes = now.getMinutes().toFixed(0),
-      seconds = now.getSeconds().toFixed(0),
+      hours = (now.getHours() % 12).toFixed(),
+      minutes = now.getMinutes().toFixed().padStart(2, '0'),
+      seconds = now.getSeconds().toFixed().padStart(2, '0'),
       suffix = ' AM';
   if (hours === '0') {
     hours = '12';
   }
-  minutes = minutes.padStart(2, '0');
-  seconds = seconds.padStart(2, '0');
   if (now.getHours() > 11) {
     suffix = ' PM';
   }
