@@ -63,15 +63,28 @@ const ONE_DAY = 24 * 60 * 60 * 1000;
 const LUNATION = (29 * ONE_DAY) + (12 * 60 * 60 * 1000) + (44 * 60 * 1000) + 2900;
 
 /*
- * Date object to the reference new moon.
+ * Date object to the reference new moon (1999-08-11).
+ *
+ * month is 0 indexed.
  */
-const EPOCH = new Date(1999, 8, 11);
+const EPOCH = new Date(1999, 7, 11);
 
-let now, phase;
+/*
+ * Boolean flag indicating whether to draw the moon as viewed northward from the southern hemisphere.
+ */
+const SOUTHERN_HEMISPHERE = false;
+
+let phase, offset;
 
 function reset() {
-  now = new Date();
+  let now = new Date();
   phase = ((now.getTime() - EPOCH.getTime()) % LUNATION) / LUNATION;
+  if (SOUTHERN_HEMISPHERE) {
+    offset = 180;
+  }
+  else {
+    offset = 0;
+  }
 }
 
 function draw() {
@@ -82,12 +95,12 @@ function draw() {
   }
   else if (phase < 0.5) {
     // Waxing
-    screen.draw.filled_circle(CENTER, MOON_RADIUS, 'white', -phase * 360, phase * 360);
+    screen.draw.filled_circle(CENTER, MOON_RADIUS, 'white', (-phase * 360) + offset, (phase * 360) + offset);
   }
   else {
     // Waning
     let start = (phase * 360) - 180;
-    screen.draw.filled_circle(CENTER, MOON_RADIUS, 'white', start, 360 - start);
+    screen.draw.filled_circle(CENTER, MOON_RADIUS, 'white', start + offset, (360 - start) + offset);
   }
 }
 
