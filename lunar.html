@@ -74,7 +74,7 @@ const EPOCH = new Date(1999, 7, 11);
  */
 const SOUTHERN_HEMISPHERE = false;
 
-let phase, offset;
+let phase, offset, elapsed;
 
 function reset() {
   let now = new Date();
@@ -85,6 +85,7 @@ function reset() {
   else {
     offset = 0;
   }
+  elapsed = 0;
 }
 
 function draw() {
@@ -101,6 +102,15 @@ function draw() {
     // Waning
     let start = (phase * 360) - 180;
     screen.draw.filled_circle(CENTER, MOON_RADIUS, 'white', start + offset, (360 - start) + offset);
+  }
+}
+
+function update(dt) {
+  elapsed += dt;
+  if (elapsed >= 0.5) {
+    phase += (ONE_DAY / LUNATION);
+    phase %= 1;
+    elapsed = 0;
   }
 }
 
